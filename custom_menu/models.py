@@ -4,7 +4,7 @@ from django.db import models
 class NodeModel(models.Model):
     title = models.CharField(max_length=80)
     parent = models.ForeignKey('self', verbose_name='parent', blank=True, null=True)
-    url = models.CharField(max_length=200, blank=True)
+    url = models.CharField('additional url (without "/")', max_length=200, blank=False)
     level = models.IntegerField(default=0, editable=False)
     menu = models.ForeignKey('Menu', related_name='contained_items', verbose_name='menu', null=True, blank=True, editable=False)
 
@@ -15,12 +15,9 @@ class NodeModel(models.Model):
         return self.caption
 
     def save(self, force_insert=False, **kwargs):
-        # Calculate level
-        old_level = self.level
-        if self.parent:
-            self.level = self.parent.level + 1
-        else:
-            self.level = 0
+        if not self.pk:
+            self.url = ''.join([self.get_parent_url(), self.url, '/'])
+
         super(NodeModel, self).save(force_insert, **kwargs)
 
     def delete(self, using=None):
