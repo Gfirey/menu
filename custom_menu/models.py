@@ -15,9 +15,12 @@ class NodeModel(models.Model):
         return self.caption
 
     def save(self, force_insert=False, **kwargs):
+        if self.parent:
+            self.level = self.parent.level + 1
+        else:
+            self.level = 0
         if not self.pk:
             self.url = ''.join([self.get_parent_url(), self.url, '/'])
-
         super(NodeModel, self).save(force_insert, **kwargs)
 
     def delete(self, using=None):
@@ -54,7 +57,7 @@ class NodeModel(models.Model):
 
     def get_parent_url(self):
         if not self.parent:
-            return NodeModel.objects.none()
+            return ''
         else:
             return self.parent.url
 
@@ -66,7 +69,7 @@ class Menu(models.Model):
     def save(self, force_insert=False, **kwargs):
         if not self.root_item:
             root_item = NodeModel()
-            root_item.caption = 'root'
+            root_item.title = 'root_'+self.name
             if not self.pk:
                 super(Menu, self).save(force_insert, **kwargs)
                 force_insert = False
@@ -74,7 +77,6 @@ class Menu(models.Model):
             root_item.save()
             self.root_item = root_item
         super(Menu, self).save(force_insert, **kwargs)
-
 
     def __str__(self):
         return self.name
