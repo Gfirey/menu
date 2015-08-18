@@ -1,0 +1,7 @@
+{% load custom_tag %}
+
+<ul>
+	{% for node in menu.root_item.children %}
+		{% draw_node node %}
+	{% endfor %}
+</ul>

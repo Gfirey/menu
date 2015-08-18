@@ -1,0 +1,16 @@
+{% load custom_tag %}
+
+
+{% if is_draw %}
+    {% if node.has_children %}
+        <li><a href="{{ node.url }}" style="{% if node.url == request.path %}color:red{% endif %}">{{ node.title }}</a>
+            <ul>
+                {% for child in node.children %}
+                    {% draw_node child %}
+                {% endfor %}
+            </ul>
+        </li>
+    {% else %}
+        <li ><a href="{{ node.url }}" style="{% if node.url == request.path %}color:red{% endif %}"   > {{ node.title }}</a></li>
+    {% endif %}
+{% endif %}
