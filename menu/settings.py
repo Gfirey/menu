@@ -85,6 +85,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 TEMPLATE_DIRS = (os.path.join(BASE_DIR, "templates"), )
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "templates/static"), )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
